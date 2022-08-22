@@ -1,7 +1,8 @@
-package io.kestra.plugin.templates;
+package io.kestra.plugin.arangodb.docs;
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import io.kestra.core.models.executions.Execution;
 import io.kestra.core.repositories.LocalFlowRepositoryLoader;
@@ -9,6 +10,7 @@ import io.kestra.core.runners.RunnerUtils;
 import io.kestra.runner.memory.MemoryRunner;
 
 import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -26,7 +28,8 @@ import static org.hamcrest.Matchers.is;
  * test to configure in-memory runner.
  */
 @MicronautTest
-class ExampleRunnerTest {
+@Disabled
+class InsertRunnerTest {
     @Inject
     protected MemoryRunner runner;
 
@@ -38,16 +41,16 @@ class ExampleRunnerTest {
 
     @BeforeEach
     private void init() throws IOException, URISyntaxException {
-        repositoryLoader.load(Objects.requireNonNull(ExampleRunnerTest.class.getClassLoader().getResource("flows")));
+        repositoryLoader.load( Objects.requireNonNull( InsertRunnerTest.class.getClassLoader().getResource( "flows" ) ) );
         this.runner.run();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     @Test
     void flow() throws TimeoutException {
-        Execution execution = runnerUtils.runOne("io.kestra.templates", "example");
+        Execution execution = runnerUtils.runOne( "io.kestra.templates", "example" );
 
-        assertThat(execution.getTaskRunList(), hasSize(3));
-        assertThat(((Map<String, Object>)execution.getTaskRunList().get(2).getOutputs().get("child")).get("value"), is("task-id"));
+        assertThat( execution.getTaskRunList(), hasSize( 3 ) );
+        assertThat( ( (Map<String, Object>) execution.getTaskRunList().get( 2 ).getOutputs().get( "child" ) ).get( "value" ), is( "task-id" ) );
     }
 }

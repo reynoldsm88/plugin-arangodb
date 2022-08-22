@@ -9,6 +9,9 @@ plugins {
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
     id "com.github.ben-manes.versions" version "0.42.0"
     id 'net.researchgate.release' version '3.0.0'
+
+    id "net.java.openjdk.shinyafox.jshell.gradle.plugin" version "1.0.5"
+
 }
 
 def isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
@@ -22,7 +25,7 @@ repositories {
 
 sourceCompatibility = 11
 group "io.kestra.plugin"
-description 'Plugin template for Kestra'
+description 'Kestra Plugin for ArangoDB'
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
@@ -47,6 +50,9 @@ dependencies {
 
     // libs included in the final jar
     api group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
+    api group: 'com.arangodb', name: 'arangodb-java-driver', version: '6.18.0'
+    api group: 'com.arangodb', name: 'jackson-dataformat-velocypack', version: '3.0.1'
+
 }
 
 
