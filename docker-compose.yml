@@ -7,6 +7,5 @@ services:
     container_name: arangodb
     ports:
       - "8529:8529"
-    platform: linux/amd64
     environment:
       ARANGO_NO_AUTH: "true"
