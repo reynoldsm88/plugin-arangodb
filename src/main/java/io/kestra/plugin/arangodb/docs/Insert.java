@@ -4,7 +4,6 @@ import com.arangodb.DbName;
 import com.arangodb.async.ArangoCollectionAsync;
 import com.arangodb.async.ArangoDBAsync;
 import com.arangodb.entity.DocumentCreateEntity;
-import com.arangodb.model.DocumentCreateOptions;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
@@ -13,7 +12,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.slf4j.Logger;
 
-import javax.swing.text.Document;
 import java.util.concurrent.CompletableFuture;
 
 @SuperBuilder
@@ -25,9 +23,9 @@ import java.util.concurrent.CompletableFuture;
         title = "ArangoDb INSERT",
         description = "Inserts a single document to ArangoDb. See the `Bulk` if you are inserting many documents in a short period of time."
 )
-public class Insert extends ArangoDbLoadInputTask implements RunnableTask<Insert.Output> {
+public class Insert extends ArangoDbInputTask implements RunnableTask<Insert.Output> {
 
-    @PluginProperty( dynamic = false )
+    @PluginProperty( dynamic = true )
     private Object value;
 
     @Override
@@ -35,7 +33,7 @@ public class Insert extends ArangoDbLoadInputTask implements RunnableTask<Insert
         Logger logger = context.logger();
 
         ArangoDBAsync client = this.connection.client();
-        ArangoCollectionAsync collection = client.db( DbName.of( this.collection ) ).collection( this.collection );
+        ArangoCollectionAsync collection = client.db( DbName.of( context.render( this.database ) ) ).collection( context.render( this.collection ) );
 
         Object document = source( this.value, context );
         CompletableFuture<DocumentCreateEntity<Object>> result = collection.insertDocument( document );
