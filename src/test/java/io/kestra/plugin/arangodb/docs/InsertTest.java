@@ -97,6 +97,5 @@ class InsertTest {
         Insert.Output runOutput = task.run( runContext );
 
         System.out.println( MessageFormat.format( "{0} {1}, {2}", runOutput.getId(), runOutput.getKey(), runOutput.getRevision() ) );
-
     }
 }
