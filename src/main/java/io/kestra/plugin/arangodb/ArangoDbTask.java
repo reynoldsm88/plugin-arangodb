@@ -1,4 +1,4 @@
-package io.kestra.plugin.arangodb.docs;
+package io.kestra.plugin.arangodb;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;

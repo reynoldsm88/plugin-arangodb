@@ -1,6 +1,7 @@
 package io.kestra.plugin.arangodb.docs;
 
 import io.kestra.core.models.annotations.PluginProperty;
+import io.kestra.plugin.arangodb.ArangoDbTask;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

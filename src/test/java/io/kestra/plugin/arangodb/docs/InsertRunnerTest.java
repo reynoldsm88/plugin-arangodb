@@ -40,7 +40,7 @@ class InsertRunnerTest {
     protected LocalFlowRepositoryLoader repositoryLoader;
 
     @BeforeEach
-    private void init() throws IOException, URISyntaxException {
+    public void init() throws IOException, URISyntaxException {
         repositoryLoader.load( Objects.requireNonNull( InsertRunnerTest.class.getClassLoader().getResource( "flows" ) ) );
         this.runner.run();
     }
@@ -48,7 +48,7 @@ class InsertRunnerTest {
     @SuppressWarnings( "unchecked" )
     @Test
     void flow() throws TimeoutException {
-        Execution execution = runnerUtils.runOne( "io.kestra.templates", "example" );
+        Execution execution = runnerUtils.runOne( "io.kestra.plugin.arangodb", "example" );
 
         assertThat( execution.getTaskRunList(), hasSize( 3 ) );
         assertThat( ( (Map<String, Object>) execution.getTaskRunList().get( 2 ).getOutputs().get( "child" ) ).get( "value" ), is( "task-id" ) );
