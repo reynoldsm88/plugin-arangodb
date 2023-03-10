@@ -1,3 +1,7 @@
+arangodb:
+  host: localhost
+  port: 8529
+
 kestra:
   repository:
     type: memory
