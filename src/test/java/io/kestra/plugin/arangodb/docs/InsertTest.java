@@ -100,4 +100,9 @@ class InsertTest extends ArangoPluginTestBase {
         assertEquals( result.get( "project" ).textValue(), "Kestra" );
     }
 
+    @Test
+    void testFailForMissingCollection() {
+
+    }
+
 }

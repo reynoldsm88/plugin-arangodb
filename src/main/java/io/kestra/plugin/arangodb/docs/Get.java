@@ -3,16 +3,19 @@ package io.kestra.plugin.arangodb.docs;
 import com.arangodb.DbName;
 import com.arangodb.async.ArangoCollectionAsync;
 import com.arangodb.async.ArangoDBAsync;
-import com.arangodb.entity.DocumentCreateEntity;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
+
 
 @SuperBuilder
 @ToString
@@ -26,7 +29,10 @@ import java.util.concurrent.CompletableFuture;
 public class Get extends ArangoDbInputTask implements RunnableTask<Get.Output> {
 
     @PluginProperty( dynamic = true )
-    private Object value;
+    private String key;
+
+    @PluginProperty( dynamic = true )
+    private Collection<String> keys;
 
     @Override
     public Get.Output run( RunContext context ) throws Exception {
@@ -36,14 +42,20 @@ public class Get extends ArangoDbInputTask implements RunnableTask<Get.Output> {
         ArangoCollectionAsync collection = client.db( DbName.of( context.render( this.database ) ) ).collection( context.render( this.collection ) );
 
         Object document = source( this.value, context );
-        CompletableFuture<DocumentCreateEntity<Object>> result = collection.insertDocument( document );
-        DocumentCreateEntity<Object> response = result.get();
 
-        return Output.builder()
-                     .id( response.getId() )
-                     .key( response.getKey() )
-                     .revision( response.getRev() )
-                     .build();
+        ObjectNode result = null;
+
+        if ( StringUtils.isNotEmpty( this.key ) && !this.keys.isEmpty() ) {
+            throw new Exception( "ambiguous operation input, only one of `key` or `keys` should be set" );
+        } else if ( StringUtils.isNotEmpty( this.key ) ) {
+            CompletableFuture<ObjectNode> response = collection.getDocument( this.key, ObjectNode.class );
+            result = response.get();
+
+        } else if ( !this.keys.isEmpty() ) {
+
+        }
+
+        return null;
     }
 
     /**
@@ -56,8 +68,7 @@ public class Get extends ArangoDbInputTask implements RunnableTask<Get.Output> {
                 title = "Returns the ArangoDB generated identifiers from the insert operation",
                 description = "This returns the _id and _key fields for the document that has been inserted."
         )
-        private final String id;
-        private final String key;
-        private final String revision;
+        private final String row;
+        private final Collection<String> rows;
     }
 }
